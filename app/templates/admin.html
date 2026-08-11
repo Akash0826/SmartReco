@@ -1,0 +1,210 @@
+<!-- app/templates/admin.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Explore Topics Section -->
+<div class="mb-8">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">Filter by Topic</h2>
+        {% if selected_category %}
+        <a href="/admin" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2 px-4 rounded-lg transition text-sm">
+            Clear Filter
+        </a>
+        {% endif %}
+    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5">
+        <div onclick="window.location.href='/admin?category=' + encodeURIComponent('🚀 AI Agents')" class="group cursor-pointer bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+            <div class="relative h-32 overflow-hidden"><img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=500&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"></div>
+            <div class="p-3.5"><h3 class="font-bold text-slate-800 text-sm group-hover:text-blue-600">🚀 AI Agents</h3></div>
+        </div>
+        <div onclick="window.location.href='/admin?category=' + encodeURIComponent('💻 Web Development')" class="group cursor-pointer bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+            <div class="relative h-32 overflow-hidden"><img src="https://images.unsplash.com/photo-1547658719-da2b51169166?auto=format&fit=crop&w=500&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"></div>
+            <div class="p-3.5"><h3 class="font-bold text-slate-800 text-sm group-hover:text-blue-600">💻 Web Dev</h3></div>
+        </div>
+        <div onclick="window.location.href='/admin?category=' + encodeURIComponent('📊 Data Science')" class="group cursor-pointer bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+            <div class="relative h-32 overflow-hidden"><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=500&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"></div>
+            <div class="p-3.5"><h3 class="font-bold text-slate-800 text-sm group-hover:text-blue-600">📊 Data Science</h3></div>
+        </div>
+        <div onclick="window.location.href='/admin?category=' + encodeURIComponent('☁️ Cloud Computing')" class="group cursor-pointer bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+            <div class="relative h-32 overflow-hidden"><img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=500&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"></div>
+            <div class="p-3.5"><h3 class="font-bold text-slate-800 text-sm group-hover:text-blue-600">☁️ Cloud Computing</h3></div>
+        </div>
+        <div onclick="window.location.href='/admin?category=' + encodeURIComponent('🔒 Cybersecurity')" class="group cursor-pointer bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+            <div class="relative h-32 overflow-hidden"><img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=500&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"></div>
+            <div class="p-3.5"><h3 class="font-bold text-slate-800 text-sm group-hover:text-blue-600">🔒 Cybersecurity</h3></div>
+        </div>
+        <div onclick="window.location.href='/admin?category=' + encodeURIComponent('📱 Mobile Dev')" class="group cursor-pointer bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+            <div class="relative h-32 overflow-hidden"><img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=500&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"></div>
+            <div class="p-3.5"><h3 class="font-bold text-slate-800 text-sm group-hover:text-blue-600">📱 Mobile Dev</h3></div>
+        </div>
+        <div onclick="window.location.href='/admin?category=' + encodeURIComponent('🔗 Blockchain')" class="group cursor-pointer bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+            <div class="relative h-32 overflow-hidden"><img src="https://images.unsplash.com/photo-1605792657660-596af9009e82?auto=format&fit=crop&w=500&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"></div>
+            <div class="p-3.5"><h3 class="font-bold text-slate-800 text-sm group-hover:text-blue-600">🔗 Blockchain</h3></div>
+        </div>
+        <div onclick="window.location.href='/admin?category=' + encodeURIComponent('🎨 UI/UX Design')" class="group cursor-pointer bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+            <div class="relative h-32 overflow-hidden"><img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=500&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"></div>
+            <div class="p-3.5"><h3 class="font-bold text-slate-800 text-sm group-hover:text-blue-600">🎨 UI/UX Design</h3></div>
+        </div>
+        <div onclick="window.location.href='/admin?category=' + encodeURIComponent('⚙️ DevOps')" class="group cursor-pointer bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+            <div class="relative h-32 overflow-hidden"><img src="https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?auto=format&fit=crop&w=500&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"></div>
+            <div class="p-3.5"><h3 class="font-bold text-slate-800 text-sm group-hover:text-blue-600">⚙️ DevOps</h3></div>
+        </div>
+        <div onclick="window.location.href='/admin?category=' + encodeURIComponent('🎮 Game Dev')" class="group cursor-pointer bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+            <div class="relative h-32 overflow-hidden"><img src="https://images.unsplash.com/photo-1552820728-8b83bb6b773f?auto=format&fit=crop&w=500&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"></div>
+            <div class="p-3.5"><h3 class="font-bold text-slate-800 text-sm group-hover:text-blue-600">🎮 Game Dev</h3></div>
+        </div>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 fade-in relative">
+    <!-- LEFT: Add New Product Form -->
+    <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-100 h-fit">
+        <h2 class="text-2xl font-bold mb-6 text-gray-800">Add New Course</h2>
+        <form id="addCourseForm" onsubmit="addCourse(event)" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Product Title</label>
+                <input type="text" name="title" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Category</label>
+                <select name="category" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border">
+                    <option value="🚀 AI Agents" {% if selected_category=='🚀 AI Agents' %}selected{% endif %}>🚀 AI Agents</option>
+                    <option value="💻 Web Development" {% if selected_category=='💻 Web Development' %}selected{% endif %}>💻 Web Development</option>
+                    <option value="📊 Data Science" {% if selected_category=='📊 Data Science' %}selected{% endif %}>📊 Data Science</option>
+                    <option value="☁️ Cloud Computing" {% if selected_category=='☁️ Cloud Computing' %}selected{% endif %}>☁️ Cloud Computing</option>
+                    <option value="🔒 Cybersecurity" {% if selected_category=='🔒 Cybersecurity' %}selected{% endif %}>🔒 Cybersecurity</option>
+                    <option value="📱 Mobile Dev" {% if selected_category=='📱 Mobile Dev' %}selected{% endif %}>📱 Mobile Dev</option>
+                    <option value="🔗 Blockchain" {% if selected_category=='🔗 Blockchain' %}selected{% endif %}>🔗 Blockchain</option>
+                    <option value="🎨 UI/UX Design" {% if selected_category=='🎨 UI/UX Design' %}selected{% endif %}>🎨 UI/UX Design</option>
+                    <option value="⚙️ DevOps" {% if selected_category=='⚙️ DevOps' %}selected{% endif %}>⚙️ DevOps</option>
+                    <option value="🎮 Game Dev" {% if selected_category=='🎮 Game Dev' %}selected{% endif %}>🎮 Game Dev</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Price ($)</label>
+                <input type="number" step="0.01" name="price" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Description</label>
+                <textarea name="description" rows="4" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"></textarea>
+            </div>
+            <button type="submit" class="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition font-bold">
+                Save & Generate Vector Embedding
+            </button>
+        </form>
+    </div>
+
+    <!-- RIGHT: Manage Existing Products -->
+    <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-100">
+        <h2 class="text-2xl font-bold mb-6 text-gray-800">
+            {% if selected_category %} Manage: {{ selected_category }} {% else %} Manage All Courses {% endif %}
+        </h2>
+        <div class="space-y-4 max-h-[600px] overflow-y-auto pr-2">
+            {% if products %}
+            {% for product in products %}
+            <div class="border border-gray-200 rounded-lg p-4 flex flex-col justify-between hover:shadow-md transition">
+                <div>
+                    <span class="text-xs font-bold text-blue-500 uppercase">{{ product.category }}</span>
+                    <h3 class="font-bold text-lg text-gray-900 mt-1">{{ product.title }}</h3>
+                    <p class="text-gray-500 text-sm mt-1 line-clamp-2">{{ product.description }}</p>
+                    <p class="font-bold text-gray-900 mt-2">${{ product.price }}</p>
+                </div>
+                <div class="mt-4 flex space-x-3 border-t border-gray-100 pt-3">
+                    <button 
+                        data-id="{{ product.id }}"
+                        data-title="{{ product.title }}"
+                        data-category="{{ product.category }}"
+                        data-price="{{ product.price }}"
+                        data-desc="{{ product.description }}"
+                        onclick="editProduct(this)"
+                        class="text-sm font-bold text-amber-600 hover:text-amber-800">Edit</button>
+                    <button onclick="deleteProduct({{ product.id }})" class="text-sm font-bold text-red-600 hover:text-red-800">Delete</button>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="text-center py-10 bg-slate-50 rounded-xl border border-slate-100">
+                <p class="text-slate-500 font-medium text-lg">
+                    {% if selected_category %} Yet to add courses for {{ selected_category }}! {% else %} Your catalog is currently empty. {% endif %}
+                </p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Sliding Side Notification (Toast) -->
+<div id="toastNotification" class="fixed bottom-8 right-8 transform translate-x-[150%] transition-transform duration-300 ease-out bg-slate-900 text-white px-6 py-4 rounded-xl shadow-2xl flex items-center space-x-3 z-50 border border-slate-700">
+    <div class="bg-green-500 rounded-full w-8 h-8 flex items-center justify-center text-lg shadow-inner border-2 border-slate-900">✓</div>
+    <div>
+        <p class="font-extrabold text-sm">Success!</p>
+        <p class="text-xs text-slate-300">Course catalog successfully updated.</p>
+    </div>
+</div>
+
+<script>
+    function showToast() {
+        const toast = document.getElementById('toastNotification');
+        toast.classList.remove('translate-x-[150%]');
+        setTimeout(() => { window.location.reload(); }, 1200);
+    }
+
+    async function addCourse(event) {
+        event.preventDefault();
+        const form = document.getElementById('addCourseForm');
+        const formData = new FormData(form);
+        const submitButton = form.querySelector('button[type="submit"]');
+        
+        const originalText = submitButton.innerText;
+        submitButton.innerText = "Processing...";
+        submitButton.disabled = true;
+        
+        try {
+            const response = await fetch('/admin/api/products/', { method: 'POST', body: formData });
+            if (response.ok) {
+                showToast();
+            } else {
+                alert("Failed to add course.");
+                submitButton.innerText = originalText;
+                submitButton.disabled = false;
+            }
+        } catch (err) {
+            console.error(err);
+            submitButton.innerText = originalText;
+            submitButton.disabled = false;
+        }
+    }
+
+    async function deleteProduct(productId) {
+        if (!confirm("Are you sure you want to permanently delete this course?")) return;
+        try {
+            const response = await fetch(`/admin/api/products/${productId}`, { method: 'DELETE' });
+            if (response.ok) { window.location.reload(); } else { alert("Failed to delete course."); }
+        } catch (err) { console.error(err); }
+    }
+
+    async function editProduct(btn) {
+        const id = btn.dataset.id;
+        const newTitle = prompt("Update Title:", btn.dataset.title);
+        if (!newTitle) return;
+        
+        const newPrice = prompt("Update Price:", btn.dataset.price);
+        if (!newPrice) return;
+        
+        const formData = new URLSearchParams();
+        formData.append("title", newTitle);
+        formData.append("category", btn.dataset.category);
+        formData.append("price", newPrice);
+        formData.append("description", btn.dataset.desc);
+        
+        try {
+            const response = await fetch(`/admin/api/products/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: formData
+            });
+            if (response.ok) { showToast(); } else { alert("Failed to update course."); }
+        } catch (err) { console.error(err); }
+    }
+</script>
+{% endblock %}

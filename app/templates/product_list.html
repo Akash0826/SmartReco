@@ -1,0 +1,55 @@
+<!-- 
+ app/templates/product_list.html
+================================
+
+Responsibility:  Displays the full catalog of products retrieved from the relational database.
+
+Pipeline Position: Presentation Layer (UI)
+-->
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="mb-8 flex justify-between items-center">
+    <h2 class="text-3xl font-bold text-gray-900">All Courses</h2>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 fade-in">
+    {% for product in products %}
+    <div
+        class="bg-white p-5 rounded-lg shadow-sm border border-gray-100 flex flex-col justify-between hover:shadow-md transition">
+        <div>
+            <span class="text-xs font-bold text-blue-500 uppercase tracking-wider">{{ product.category }}</span>
+            <h4 class="text-lg font-bold mt-1 mb-2">
+                <!-- Tracks the click before navigating -->
+                <a href="/products/{{ product.id }}" data-track-click="true" data-action="view_product"
+                    data-product-id="{{ product.id }}" class="hover:text-blue-600">
+                    {{ product.title }}
+                </a>
+            </h4>
+            <p class="text-sm text-gray-600 line-clamp-3">{{ product.description }}</p>
+        </div>
+
+        <!-- UPDATED: Flex container to hold the price and the dynamic enrollment button -->
+        <div class="mt-4 pt-4 border-t border-gray-100 flex justify-between items-center">
+            <span class="font-bold text-gray-900">${{ product.price }}</span>
+
+            {% if product.id in enrolled_product_ids %}
+            <a href="/products/{{ product.id }}"
+                class="bg-green-100 text-green-800 font-bold text-sm px-4 py-2 rounded border border-green-200">
+                Enrolled ✅
+            </a>
+            {% else %}
+            <a href="/products/{{ product.id }}"
+                class="bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-blue-700 transition">
+                View Details
+            </a>
+            {% endif %}
+        </div>
+
+    </div>
+    {% else %}
+    <p class="text-gray-500 col-span-3 text-center py-8">No products found. Add some from the Admin panel.</p>
+    {% endfor %}
+</div>
+{% endblock %}

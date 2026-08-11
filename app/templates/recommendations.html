@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container my-4">
+    <h2 class="mb-4">Recommended For You</h2>
+
+    <!-- AI Narrative Alert Box -->
+    <div class="alert alert-primary shadow-sm mb-4">
+        <h4 class="alert-heading"><i class="bi bi-stars"></i> Your Custom Learning Path</h4>
+        <p class="mb-0 fs-6" style="white-space: pre-line;">{{ narrative }}</p>
+    </div>
+
+    <!-- Course Cards Grid -->
+    <h4 class="mb-3 text-secondary">Suggested Courses to Enroll:</h4>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% for course in courses %}
+        <div class="col">
+            <div class="card h-100 shadow border-0">
+                <div class="card-body">
+                    <span class="badge bg-info text-dark mb-2">{{ course.category or "General" }}</span>
+                    <h5 class="card-title text-primary fw-bold">{{ course.title }}</h5>
+                    <p class="card-text text-muted">{{ course.description }}</p>
+                    <div class="fw-bold fs-5 text-success mb-3">
+                        {% if course.price %}${{ course.price }}{% else %}Free{% endif %}
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-top-0 pt-0">
+                    <form action="/enroll" method="POST">
+                        <input type="hidden" name="product_id" value="{{ course.id }}">
+                        <button type="submit" class="btn btn-primary w-100 fw-bold">
+                            <i class="bi bi-journal-plus"></i> Enroll Now
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-12 text-center text-muted py-5">
+            <div class="alert alert-warning">
+                <h5>⚠️ No Unenrolled Courses Found</h5>
+                <p class="mb-0">You have either enrolled in all available courses, or there are no products created in
+                    your database table!</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

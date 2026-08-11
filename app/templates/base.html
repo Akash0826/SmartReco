@@ -1,0 +1,92 @@
+<!-- 
+ app/templates/base.html
+========================
+
+Responsibility:  Master Jinja2 layout containing the nav, CSS, and tracker script injection.
+
+Pipeline Position: Presentation Layer (UI)
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartReco | AI Learning</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/static/css/style.css">
+
+    <!-- Inject User ID for Tracker -->
+    <script>
+        window.SMARTRECO_USER_ID = {{ user_id | default ('null') }};
+    </script>
+    <script src="/static/js/tracker.js" defer></script>
+</head>
+
+<body class="bg-gray-50 text-gray-900 font-sans min-h-screen flex flex-col">
+
+    <nav class="bg-white shadow-sm px-6 py-4 flex justify-between items-center border-b border-gray-200">
+        <a href="/" class="text-2xl font-extrabold text-blue-600 tracking-tight" data-track-click="true"
+            data-action="nav_logo">SmartReco</a>
+
+        <!-- Navigation Links Container -->
+        <div class="space-x-6 text-sm font-bold text-gray-500 flex items-center">
+
+            <!-- Shared Tabs for EVERYONE -->
+            <a href="/" class="nav-link py-1 hover:text-blue-600 transition" data-track-click="true"
+                data-action="nav_home">Dashboard</a>
+
+            <a href="/products" class="nav-link py-1 hover:text-blue-600 transition" data-track-click="true"
+                data-action="nav_catalog">View Courses</a>
+
+            {% if user_role == 'admin' %}
+            <!-- Admin Only Tab -->
+            <a href="/admin" class="nav-link py-1 hover:text-blue-600 transition" data-track-click="true"
+                data-action="nav_admin">Manage Courses</a>
+            {% else %}
+            <!-- User Only Tabs -->
+            <a href="/enrolled" class="nav-link py-1 hover:text-blue-600 transition" data-track-click="true"
+                data-action="nav_enrolled">Enrolled Courses</a>
+            <!--
+            <a href="/recommended" class="nav-link py-1 hover:text-blue-600 transition" data-track-click="true"
+                data-action="nav_recommended">Recommended Courses</a>
+            -->
+            {% endif %}
+
+            {% if user_id %}
+            <a href="/auth/logout" class="nav-link py-1 hover:text-blue-600 transition">Logout</a>
+            {% else %}
+            <a href="/login" class="nav-link py-1 hover:text-blue-600 transition">Login</a>
+            {% endif %}
+
+        </div>
+    </nav>
+
+    <main class="flex-grow max-w-5xl w-full mx-auto mt-8 px-4 pb-12">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="bg-white border-t border-gray-200 py-6 text-center text-sm text-gray-500 mt-auto">
+        Built for the SmartReco Build Challenge 🚀
+    </footer>
+
+    <!-- Active Tab Highlighter Script -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const currentPath = window.location.pathname;
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            navLinks.forEach(link => {
+                // Check if the link's href matches the current browser path
+                if (link.getAttribute('href') === currentPath) {
+                    // Apply Active State: Blue text and a bottom border
+                    link.classList.add('text-blue-600', 'border-b-2', 'border-blue-600');
+                    link.classList.remove('text-gray-500');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

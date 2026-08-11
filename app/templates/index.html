@@ -1,0 +1,250 @@
+<!-- app/templates/index.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<div class="space-y-8">
+    
+    <!-- AI ASSISTANT PROMPT BOX (Hidden for Admins) -->
+    {% if user_role != 'admin' %}
+    <section class="max-w-4xl mx-auto mt-4 mb-8 bg-white rounded-2xl shadow-xl border border-blue-100 overflow-hidden transform transition-all hover:shadow-2xl">
+        <div class="bg-gradient-to-r from-blue-600 to-indigo-700 p-8 text-white text-center relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-32 h-32 bg-white opacity-10 rounded-full blur-2xl -translate-x-1/2 -translate-y-1/2"></div>
+            <div class="absolute bottom-0 right-0 w-32 h-32 bg-white opacity-10 rounded-full blur-2xl translate-x-1/2 translate-y-1/2"></div>
+            
+            <h2 class="text-3xl font-extrabold flex justify-center items-center gap-3 relative z-10">
+                <svg class="w-8 h-8 text-blue-200" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 2a8 8 0 100 16 8 8 0 000-16zM9 9V5a1 1 0 112 0v4h2a1 1 0 110 2h-2v4a1 1 0 11-2 0v-4H7a1 1 0 110-2h2z"></path>
+                </svg>
+                Hi, I'm your AI Learning Assistant!
+            </h2>
+            <p class="text-blue-100 mt-3 text-lg font-medium relative z-10">Let me know what you need to learn, and let's get started.</p>
+        </div>
+        <div class="p-8 bg-gray-50">
+            <!-- Intercept submission with JS -->
+            <form id="assistantForm" onsubmit="submitPrompt(event)" class="relative">
+                <input type="text" name="user_prompt" required
+                    placeholder="e.g., I want to transition into Data Engineering and learn Python..."
+                    class="w-full pl-6 pr-40 py-5 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:ring-0 text-lg transition-colors bg-white text-gray-900 placeholder-gray-400 font-medium shadow-inner">
+                <button type="submit"
+                    class="absolute right-3 top-3 bottom-3 bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 rounded-lg shadow-md transition-all flex items-center gap-2">
+                    <span>Curate Path</span>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                    </svg>
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- SHIMMERING LOADER SKELETON (Hidden by default) -->
+    <section id="recommendationSkeleton" class="hidden bg-blue-50 rounded-xl p-8 border border-blue-100 shadow-sm mb-8">
+        <div class="flex items-center space-x-3 mb-6">
+            <div class="h-8 w-8 bg-blue-200 rounded-lg animate-pulse"></div>
+            <div class="h-6 w-64 bg-blue-200 rounded animate-pulse"></div>
+        </div>
+        <div class="space-y-3 mb-8">
+            <div class="h-4 w-full max-w-3xl bg-blue-200 rounded animate-pulse"></div>
+            <div class="h-4 w-full max-w-xl bg-blue-200 rounded animate-pulse"></div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {% for i in range(3) %}
+            <div class="bg-white p-5 rounded-lg border border-gray-100 h-52 flex flex-col justify-between animate-pulse shadow-sm">
+                <div>
+                    <div class="h-3 w-20 bg-gray-200 rounded mb-3"></div>
+                    <div class="h-5 w-3/4 bg-gray-300 rounded mb-4"></div>
+                    <div class="h-3 w-full bg-gray-200 rounded mb-2"></div>
+                    <div class="h-3 w-5/6 bg-gray-200 rounded"></div>
+                </div>
+                <div class="border-t border-gray-100 pt-4 flex justify-between items-center mt-4">
+                    <div class="h-5 w-12 bg-gray-300 rounded"></div>
+                    <div class="h-9 w-28 bg-blue-200 rounded-lg"></div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- EXISTING AI RECOMMENDATION SECTION -->
+    {% if recommendation and user_role != 'admin' %}
+    <section id="actualRecommendations" class="bg-blue-50 rounded-xl p-8 border border-blue-100 fade-in shadow-sm mb-8">
+        <div class="flex items-center space-x-2 mb-4 text-blue-800">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+            </svg>
+            <h3 class="text-xl font-bold">Curated Just For You</h3>
+        </div>
+        <p class="text-lg text-gray-800 italic mb-6">"{{ recommendation.narrative }}"</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {% for product in recommended_products %}
+            <div class="bg-white p-5 rounded-lg shadow-sm border border-gray-100 flex flex-col justify-between hover:shadow-md transition">
+                <div>
+                    <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">{{ product.category }}</span>
+                    <h4 class="text-lg font-bold mt-1 mb-2">{{ product.title }}</h4>
+                    <p class="text-sm text-gray-600 line-clamp-3">{{ product.description }}</p>
+                </div>
+                <div class="mt-4 pt-4 border-t border-gray-100 flex justify-between items-center">
+                    <span class="font-bold text-gray-900">${{ product.price }}</span>
+                    {% if product.id in enrolled_product_ids %}
+                    <a href="/products/{{ product.id }}" class="bg-green-100 text-green-800 font-bold text-sm px-4 py-2 rounded border border-green-200">Enrolled</a>
+                    {% else %}
+                    <a href="/products/{{ product.id }}" class="bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-blue-700 transition">View Course</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Admin Header -->
+    {% if user_role == 'admin' %}
+    <section class="text-center py-12 bg-white rounded-xl shadow-sm border border-gray-100">
+        <h2 class="text-3xl font-bold mb-4">Welcome back to the Admin Dashboard.</h2>
+        <p class="text-gray-500">Manage your course catalog below.</p>
+    </section>
+    {% endif %}
+
+    <!-- Explore Topics Section -->
+    <div class="mt-10 mb-8">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">Explore Topics</h2>
+            {% if selected_category %}
+            <a href="/" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2 px-4 rounded-lg transition text-sm">
+                Clear Filter
+            </a>
+            {% endif %}
+        </div>
+        <!-- 10-Card Responsive Grid with Tracker Integration -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5">
+            <div onclick="filterTopic('🚀 AI Agents')" data-track-click="true" data-action="search" data-product-id="🚀 AI Agents" class="group cursor-pointer bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                <div class="relative h-32 overflow-hidden"><img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=500&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"></div>
+                <div class="p-3.5"><h3 class="font-bold text-slate-800 text-sm group-hover:text-blue-600">🚀 AI Agents</h3></div>
+            </div>
+            <div onclick="filterTopic('💻 Web Development')" data-track-click="true" data-action="search" data-product-id="💻 Web Development" class="group cursor-pointer bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                <div class="relative h-32 overflow-hidden"><img src="https://images.unsplash.com/photo-1547658719-da2b51169166?auto=format&fit=crop&w=500&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"></div>
+                <div class="p-3.5"><h3 class="font-bold text-slate-800 text-sm group-hover:text-blue-600">💻 Web Dev</h3></div>
+            </div>
+            <div onclick="filterTopic('📊 Data Science')" data-track-click="true" data-action="search" data-product-id="📊 Data Science" class="group cursor-pointer bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                <div class="relative h-32 overflow-hidden"><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=500&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"></div>
+                <div class="p-3.5"><h3 class="font-bold text-slate-800 text-sm group-hover:text-blue-600">📊 Data Science</h3></div>
+            </div>
+            <div onclick="filterTopic('☁️ Cloud Computing')" data-track-click="true" data-action="search" data-product-id="☁️ Cloud Computing" class="group cursor-pointer bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                <div class="relative h-32 overflow-hidden"><img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=500&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"></div>
+                <div class="p-3.5"><h3 class="font-bold text-slate-800 text-sm group-hover:text-blue-600">☁️ Cloud Computing</h3></div>
+            </div>
+            <div onclick="filterTopic('🔒 Cybersecurity')" data-track-click="true" data-action="search" data-product-id="🔒 Cybersecurity" class="group cursor-pointer bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                <div class="relative h-32 overflow-hidden"><img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=500&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"></div>
+                <div class="p-3.5"><h3 class="font-bold text-slate-800 text-sm group-hover:text-blue-600">🔒 Cybersecurity</h3></div>
+            </div>
+            <div onclick="filterTopic('📱 Mobile Dev')" data-track-click="true" data-action="search" data-product-id="📱 Mobile Dev" class="group cursor-pointer bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                <div class="relative h-32 overflow-hidden"><img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=500&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"></div>
+                <div class="p-3.5"><h3 class="font-bold text-slate-800 text-sm group-hover:text-blue-600">📱 Mobile Dev</h3></div>
+            </div>
+            <div onclick="filterTopic('🔗 Blockchain')" data-track-click="true" data-action="search" data-product-id="🔗 Blockchain" class="group cursor-pointer bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                <div class="relative h-32 overflow-hidden"><img src="https://images.unsplash.com/photo-1605792657660-596af9009e82?auto=format&fit=crop&w=500&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"></div>
+                <div class="p-3.5"><h3 class="font-bold text-slate-800 text-sm group-hover:text-blue-600">🔗 Blockchain</h3></div>
+            </div>
+            <div onclick="filterTopic('🎨 UI/UX Design')" data-track-click="true" data-action="search" data-product-id="🎨 UI/UX Design" class="group cursor-pointer bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                <div class="relative h-32 overflow-hidden"><img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=500&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"></div>
+                <div class="p-3.5"><h3 class="font-bold text-slate-800 text-sm group-hover:text-blue-600">🎨 UI/UX Design</h3></div>
+            </div>
+            <div onclick="filterTopic('⚙️ DevOps')" data-track-click="true" data-action="search" data-product-id="⚙️ DevOps" class="group cursor-pointer bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                <div class="relative h-32 overflow-hidden"><img src="https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?auto=format&fit=crop&w=500&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"></div>
+                <div class="p-3.5"><h3 class="font-bold text-slate-800 text-sm group-hover:text-blue-600">⚙️ DevOps</h3></div>
+            </div>
+            <div onclick="filterTopic('🎮 Game Dev')" data-track-click="true" data-action="search" data-product-id="🎮 Game Dev" class="group cursor-pointer bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                <div class="relative h-32 overflow-hidden"><img src="https://images.unsplash.com/photo-1552820728-8b83bb6b773f?auto=format&fit=crop&w=500&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"></div>
+                <div class="p-3.5"><h3 class="font-bold text-slate-800 text-sm group-hover:text-blue-600">🎮 Game Dev</h3></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtered Courses Results -->
+    {% if selected_category %}
+    <section class="mt-10 mb-12 fade-in">
+        <h3 class="text-2xl font-bold text-gray-900 mb-6">Courses in {{ selected_category }}</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {% for product in category_products %}
+            <div class="bg-white p-5 rounded-lg shadow-sm border border-gray-100 flex flex-col justify-between hover:shadow-md transition">
+                <div>
+                    <span class="text-xs font-bold text-blue-500 uppercase tracking-wider">{{ product.category }}</span>
+                    <h4 class="text-lg font-bold mt-1 mb-2">
+                        <a href="/products/{{ product.id }}" data-track-click="true" data-action="view_product"
+                            data-product-id="{{ product.id }}" class="hover:text-blue-600">
+                            {{ product.title }}
+                        </a>
+                    </h4>
+                    <p class="text-sm text-gray-600 line-clamp-3">{{ product.description }}</p>
+                </div>
+                <div class="mt-4 pt-4 border-t border-gray-100 flex justify-between items-center">
+                    <span class="font-bold text-gray-900">${{ product.price }}</span>
+                    <a href="/products/{{ product.id }}" class="text-sm font-bold text-blue-600 hover:text-blue-800">Details &rarr;</a>
+                </div>
+            </div>
+            {% else %}
+            <!-- EMPTY STATE MESSAGE -->
+            <div class="col-span-3 text-center py-10 bg-slate-50 rounded-xl border border-slate-100">
+                <p class="text-slate-500 font-medium text-lg">Yet to add courses for {{ selected_category }}!</p>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+</div>
+
+<!-- JSON Fetch Script -->
+<script>
+    async function submitPrompt(e) {
+        e.preventDefault(); 
+        const form = e.target;
+        const btn = form.querySelector('button');
+        const formData = new FormData(form);
+
+        const originalBtnHtml = btn.innerHTML;
+        btn.innerHTML = `<svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg><span class="ml-2">Analyzing...</span>`;
+        btn.disabled = true;
+        btn.classList.add('opacity-80', 'cursor-not-allowed');
+
+        const actualRecs = document.getElementById('actualRecommendations');
+        const skeleton = document.getElementById('recommendationSkeleton');
+        
+        if (actualRecs) actualRecs.classList.add('hidden');
+        skeleton.classList.remove('hidden');
+        skeleton.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        try {
+            const response = await fetch('/ask_assistant', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    user_prompt: formData.get('user_prompt')
+                })
+            });
+            
+            if (response.ok) {
+                window.location.reload();
+            } else {
+                alert("Failed to process your request. Please try again.");
+                btn.innerHTML = originalBtnHtml;
+                btn.disabled = false;
+                skeleton.classList.add('hidden');
+                if (actualRecs) actualRecs.classList.remove('hidden');
+            }
+        } catch (err) {
+            console.error(err);
+            btn.innerHTML = originalBtnHtml;
+            btn.disabled = false;
+        }
+    }
+
+    function filterTopic(category) {
+        setTimeout(() => {
+            window.location.href = '/?category=' + encodeURIComponent(category);
+        }, 150);
+    }
+</script>
+{% endblock %}

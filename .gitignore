@@ -1,0 +1,21 @@
+# Python environment
+venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Environment variables (CRITICAL)
+.env
+.env.local
+
+# Local Databases
+*.sqlite3
+.lancedb_data/
+chroma_data/
+pgdata/
+
+# OS generated files
+.DS_Store
+Thumbs.db
